@@ -9,6 +9,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 @step('open eBay.com')
 def open_browser(context):
+    # no parameter service in chrome for some reason
     # driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
     context.driver = webdriver.Chrome(ChromeDriverManager().install())
     context.driver.get("https://www.eBay.com/")
@@ -33,9 +34,10 @@ def click_search_button(context):
 @step('click first available item from results list')
 def click_first_result(context):
     first_result = context.driver.find_element(by=By.XPATH,
-                                               value="//li[@class='s-item s-item__pl-on-bottom s-item--watch-at-corner']//a[@class='s-item__link']")
+                                               value="//li[@class='s-item s-item__pl-on-bottom s-item--watch-at-corner']"
+                                                     "//a[@class='s-item__link']")
     first_result.click()
-    sleep(5)
+    sleep(2)
 
 
 @step('click "Add to the cart"')
@@ -43,7 +45,14 @@ def add_to_cart(context):
     button_add_to_cart = context.driver.find_element(by=By.XPATH,
                                                      value="//a[@id='atcRedesignId_btn' and contains(text(), 'to cart')]")
     button_add_to_cart.click()
-    sleep(3)
+    sleep(2)
+
+
+@step('Make sure you\'ve been navigated to Daily Deals')
+def validate_page(context):
+    page_title = context.driver.find_element(by=By.XPATH,
+                                             value="//div[@class='navigation-desktop']/h1/a[text()='Deals']")
+    assert page_title.text == 'Deals'
 
 
 @step('click Daily Deals')
@@ -51,7 +60,7 @@ def click_daily_deals(context):
     daily_deals_link = context.driver.find_element(by=By.XPATH,
                                                    value="//a[@class='gh-p' and contains(text(), 'Deals')]")
     daily_deals_link.click()
-    sleep(3)
+    sleep(2)
 
 
 @step('click SPOTLIGHT DEAL')
@@ -59,7 +68,7 @@ def validate_page_dd(context):
     first_item = context.driver.find_element(by=By.XPATH,
                                              value="//span[@class='ebayui-ellipsis-3']")
     first_item.click()
-    sleep(3)
+    sleep(2)
 
 
 @step('click "Go to cart"')
@@ -68,3 +77,89 @@ def click_go_to_cart(context):
                                                  value="//div[@role='document']//span[text()='Go to cart']")
     btn_go_to_cart.click()
     sleep(3)
+
+
+@step('click Brand Outlet')
+def go_to_brand_outlet(context):
+    brand_otlet = context.driver.find_element(by=By.XPATH,
+                                              value="//a[@class='gh-p' and contains(text(), 'Outlet')]")
+    brand_otlet.click()
+    sleep(2)
+
+
+@step('Make sure you\'ve been navigated to Brand Outlet')
+def validate_page_bo(context):
+    page_bo = context.driver.find_element(by=By.XPATH,
+                                          value="//span[@class='b-pageheader__text']")
+    assert page_bo.text == 'The Brand Outlet'
+
+
+@step('choose Champion - up to 50 percent off')
+def choose_champion(context):
+    cat = context.driver.find_element(by=By.XPATH,
+                                      value="//span[@class='b-accordion-text' and contains(text(), 'Clothing')]")
+    cat.click()
+    sub_cat = context.driver.find_element(by=By.XPATH,
+                                          value="//ul[@class = 'b-accordion-subtree']//a[contains(text(), 'Champion')]")
+    sub_cat.click()
+    sleep(2)
+
+
+@step('choose shop category "cameras & photo"')
+def choose_cat_cameras(context):
+    btn_list_of_cat = context.driver.find_element(by=By.XPATH,
+                                                  value="//button[@id='gh-shop-a']")
+    btn_list_of_cat.click()
+    cat = context.driver.find_element(by=By.XPATH,
+                                      value="//li/a[@class='scnd' and text()='Cameras & Photo']")
+    cat.click()
+    sleep(2)
+
+
+@step('choose category "camera drones"')
+def choose_cet_camera_drones(context):
+    cat = context.driver.find_element(by=By.XPATH,
+                                      value="//div[@class='b-visualnav__title' and text()='Camera Drones']")
+    cat.click()
+    sleep(2)
+
+
+@step('choose "DJI camera drones"')
+def choose_dji(context):
+    vendor = context.driver.find_element(by=By.XPATH,
+                                         value="//p[@class='b-guidancecard__title' and contains(text(), 'DJI')]")
+    vendor.click()
+    sleep(2)
+
+
+@step('choose model "DJI Mavic 2 Pro"')
+def choose_model(context):
+    model = context.driver.find_element(by=By.XPATH,
+                                        value="//p[@class='b-guidancecard__title' and contains(text(), 'Mavic 2 Pro')]")
+    model.click()
+    sleep(2)
+
+
+@step('choose only "buy it now"')
+def choose_by_now(context):
+    buy_it_now = context.driver.find_element(by=By.XPATH,
+                                             value="//h2[@class='srp-format-tabs-h2' and text()='Buy It Now']")
+    buy_it_now.click()
+    sleep(2)
+
+
+@step('choose first deal from the list')
+def choose_first_deal(context):
+    deal = context.driver.find_element(by=By.XPATH,
+                                       value="//li[@class='s-item s-item--large']")
+    deal.click()
+    sleep(2)
+
+
+@step('click "Add to the cart second way"')
+def add_to_cart(context):
+    button_add_to_cart = context.driver.find_element(by=By.XPATH,
+                                                     value="//div[@class='item-desc']"
+                                                           "//a[@data-action-name='ADDTOCART' and text()='Add to cart']")
+    button_add_to_cart.click()
+    sleep(2)
