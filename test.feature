@@ -8,7 +8,7 @@ Feature: eBay tests HW-1
     And click "Add to the cart"
     And click "Go to cart"
 
-  Scenario: daily deals validation
+  Scenario: Daily deals validation
     Given open eBay.com
     And click Daily Deals
     Then Make sure you've been navigated to Daily Deals
