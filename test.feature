@@ -37,5 +37,5 @@ Feature: eBay tests HW-1
     And choose model "DJI Mavic 2 Pro"
     And choose only "buy it now"
     Then choose first deal from the list
-    # Then switch to new window
-    And click "Add to the cart second way"
+    And click "Add to the cart"
+    And click "Go to cart"

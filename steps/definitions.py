@@ -1,5 +1,4 @@
 from time import sleep
-
 from behave import step
 from selenium import webdriver
 # from selenium.webdriver.chrome.service import Service as ChromeService
@@ -33,15 +32,28 @@ def click_search_button(context):
 
 @step('click first available item from results list')
 def click_first_result(context):
+    # Close tool tip window because it covered main element and result cannot be clicked
+    try:
+        tool_tip = context.driver.find_element(by=By.XPATH,
+                                               value="//button[@class='srp-save-search__tooltip-close']")
+        tool_tip.click()
+    except Exception as e:
+        print(e)
+
+    sleep(3)
+
     first_result = context.driver.find_element(by=By.XPATH,
-                                               value="//li[@class='s-item s-item__pl-on-bottom s-item--watch-at-corner']"
-                                                     "//a[@class='s-item__link']")
+                                               value="//li[@class='s-item s-item__pl-on-bottom s-item--watch-at-corner']//div[@class='s-item__image-wrapper']/img")
     first_result.click()
-    sleep(2)
+    sleep(5)
 
 
 @step('click "Add to the cart"')
 def add_to_cart(context):
+    if len(context.driver.window_handles) == 2:
+        context.driver.switch_to.window(context.driver.window_handles[1])
+    else:
+        context.driver.switch_to.window(context.driver.window_handles[0])
     button_add_to_cart = context.driver.find_element(by=By.XPATH,
                                                      value="//a[@id='atcRedesignId_btn' and contains(text(), 'to cart')]")
     button_add_to_cart.click()
@@ -153,13 +165,4 @@ def choose_first_deal(context):
     deal = context.driver.find_element(by=By.XPATH,
                                        value="//li[@class='s-item s-item--large']")
     deal.click()
-    sleep(2)
-
-
-@step('click "Add to the cart second way"')
-def add_to_cart(context):
-    button_add_to_cart = context.driver.find_element(by=By.XPATH,
-                                                     value="//div[@class='item-desc']"
-                                                           "//a[@data-action-name='ADDTOCART' and text()='Add to cart']")
-    button_add_to_cart.click()
     sleep(2)
