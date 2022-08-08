@@ -1,4 +1,5 @@
 from time import sleep
+
 from behave import step
 from selenium import webdriver
 # from selenium.webdriver.chrome.service import Service as ChromeService
@@ -43,7 +44,8 @@ def click_first_result(context):
     sleep(3)
 
     first_result = context.driver.find_element(by=By.XPATH,
-                                               value="//li[@class='s-item s-item__pl-on-bottom s-item--watch-at-corner']//div[@class='s-item__image-wrapper']/img")
+                                               value="//li[@class='s-item s-item__pl-on-bottom s-item--watch-at-corner']"
+                                                     "//div[@class='s-item__image-wrapper']/img")
     first_result.click()
     sleep(5)
 
@@ -165,4 +167,33 @@ def choose_first_deal(context):
     deal = context.driver.find_element(by=By.XPATH,
                                        value="//li[@class='s-item s-item--large']")
     deal.click()
+    sleep(2)
+
+
+@step('click to Sell')
+def go_to_sell(context):
+    sell_page = context.driver.find_element(by=By.XPATH,
+                                            value="//a[@class='gh-p' and contains(text(), 'Sell')]")
+    sell_page.click()
+    sleep(2)
+
+
+@step('Make sure you\'ve been navigated to Sell')
+def validate_sell_page(context):
+    sell_page = context.driver.find_element(by=By.XPATH,
+                                            value="//h1[@class='textual-display sell-home__page-title']/span")
+    sell_page_footer = context.driver.find_element(by=By.XPATH,
+                                                   value="//h3[@class = 'textual-display footer-links__title' "
+                                                         "and contains(text(), 'Selling')]")
+    assert sell_page.text == 'You are on selling home page'
+    assert sell_page_footer.text == 'Selling on eBay'
+
+
+# sometimes need to use this code when choose from category
+@step('click "Add to the cart second way"')
+def add_to_cart(context):
+    button_add_to_cart = context.driver.find_element(by=By.XPATH,
+                                                     value="//div[@class='item-desc']"
+                                                           "//a[@data-action-name='ADDTOCART' and text()='Add to cart']")
+    button_add_to_cart.click()
     sleep(2)

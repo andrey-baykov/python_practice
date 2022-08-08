@@ -38,4 +38,10 @@ Feature: eBay tests HW-1
     And choose only "buy it now"
     Then choose first deal from the list
     And click "Add to the cart"
+    # And click "Add to the cart second way"
     And click "Go to cart"
+
+  Scenario: Validate Sell
+    Given open eBay.com
+    Then click to Sell
+    And Make sure you've been navigated to Sell
