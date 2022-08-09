@@ -2,16 +2,14 @@ from time import sleep
 
 from behave import step
 from selenium import webdriver
-# from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 
 
 @step('open eBay.com')
 def open_browser(context):
-    # no parameter service in chrome for some reason
-    # driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
-    context.driver = webdriver.Chrome(ChromeDriverManager().install())
+    context.driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
     context.driver.get("https://www.eBay.com/")
 
 

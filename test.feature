@@ -1,4 +1,4 @@
-Feature: eBay tests HW-1
+Feature: eBay tests HW-2
 
   Scenario: Add tv to the cart
     Given open eBay.com
