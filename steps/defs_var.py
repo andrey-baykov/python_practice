@@ -2,6 +2,7 @@ from time import sleep
 
 from behave import step
 from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
@@ -25,8 +26,4 @@ def choose_cat(context, shop_by, cat):
     sleep(1)
 
 
-@step('verify page "{title}" was opened')
-def verify_page(context, title):
-    page = context.driver.find_element(by=By.XPATH,
-                                       value=f"//nav[@class='breadcrumbs']//span[text()='{title}']")
-    assert page.text == title
+
