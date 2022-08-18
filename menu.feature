@@ -197,6 +197,12 @@ Feature: Test with asserts
     And choose "Show only" and "Free Returns" in left menu
     And verify item condition is "Brand New"
 
+  Scenario: Verify book "Clean Code" is brand new with filter "New"
+    Given open eBay website
+    Then type "Clean code" to search string and click search button
+    And choose "Condition" and "New" in left menu
+    And verify item condition is "Brand New"
+
   Scenario: Verify book "Clean Code" is sponsored
     Given open eBay website
     Then type "Clean code" to search string and click search button
@@ -208,3 +214,43 @@ Feature: Test with asserts
     Then type "Dysov V8" to search string and click search button
     And verify item contains text "Dyson V8"
 
+  Scenario: Daily deals validation
+    Given open eBay.com
+    And click pages menu "Daily Deals"
+    Then Make sure you have been navigated to page "Deals"
+
+  Scenario: Daily deals validation SPOTLIGHT DEAL more 50% OFF
+    Given open eBay.com
+    And click pages menu "Daily Deals"
+    Then Make sure you have been navigated to page "Deals"
+    And verify SPOTLIGHT DEAL percentage more than 50 %
+
+  Scenario: Daily deals validation SPOTLIGHT DEAL between 30% and 50% OFF
+    Given open eBay.com
+    And click pages menu "Daily Deals"
+    Then Make sure you have been navigated to page "Deals"
+    And verify SPOTLIGHT DEAL percentage between 70 and 85 %
+
+  Scenario: Daily deals validation SPOTLIGHT DEAL is correct
+    Given open eBay.com
+    And click pages menu "Daily Deals"
+    Then Make sure you have been navigated to page "Deals"
+    And verify SPOTLIGHT DEAL is correct
+
+  Scenario: Daily deals validation FEATURED DEALS more 50% OFF
+    Given open eBay.com
+    And click pages menu "Daily Deals"
+    Then Make sure you have been navigated to page "Deals"
+    And verify FEATURED DEALS percentage more than 50 %
+
+  Scenario: Daily deals validation FEATURED DEALS between 30% and 50% OFF
+    Given open eBay.com
+    And click pages menu "Daily Deals"
+    Then Make sure you have been navigated to page "Deals"
+    And verify FEATURED DEALS percentage between 70 and 80 %
+
+  Scenario: Daily deals validation FEATURED DEALS is correct
+    Given open eBay.com
+    And click pages menu "Daily Deals"
+    Then Make sure you have been navigated to page "Deals"
+    And verify FEATURED DEALS is correct

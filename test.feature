@@ -11,7 +11,7 @@ Feature: eBay tests HW-2
   Scenario: Daily deals validation
     Given open eBay.com
     And click Daily Deals
-    Then Make sure you've been navigated to Daily Deals
+    Then Make sure you've been navigated to page "Daily Deals"
 
   Scenario: Daily deals to cart
     Given open eBay.com

@@ -262,3 +262,108 @@ def choose_cat_search_line(context, category):
                                                 value=f"//select[@aria-label='Select a category for search']/option[text()=' Music']")
     cat_from_list.click()
     sleep(3)
+
+
+@step('click pages menu "{page}"')
+def click_daily_deals(context, page):
+    daily_deals_link = context.driver.find_element(by=By.XPATH,
+                                                   value=f"//a[@class='gh-p' and contains(text(), '{page}')]")
+    daily_deals_link.click()
+    sleep(2)
+
+
+@step('Make sure you have been navigated to page "{page}"')
+def validate_page(context, page):
+    page_title = context.driver.find_element(by=By.XPATH,
+                                             value=f"//div[@class='navigation-desktop']/h1/a[text()='{page}']")
+    assert page_title.text == 'Deals'
+
+
+@step('verify SPOTLIGHT DEAL percentage more than {percent} %')
+def verify_discount_percent(context, percent):
+    current_discount = context.driver.find_element(by=By.XPATH,
+                                                   value=f"//div[./h2/*[text()='Spotlight Deal']]"
+                                                         f"//span[@class='itemtile-price-bold']")
+    discount = float(current_discount.text[:2])
+    if float(percent) > discount:
+        warnings.warn(f'Expected discount more than "{percent}" but current "{discount}"')
+        raise Exception('Discount too low!')
+
+
+@step('verify SPOTLIGHT DEAL percentage between {min_percent} and {max_percent} %')
+def verify_discount_percent(context, min_percent, max_percent):
+    current_discount = context.driver.find_element(by=By.XPATH,
+                                                   value=f"//div[./h2/*[text()='Spotlight Deal']]"
+                                                         f"//span[@class='itemtile-price-bold']")
+    discount = float(current_discount.text[:2])
+    if float(min_percent) > discount:
+        warnings.warn(f'Expected discount more than "{min_percent}%" but current "{discount}%"')
+        raise Exception('Discount too low!')
+    elif float(max_percent) < discount:
+        warnings.warn(f'Expected discount less than "{max_percent}%" but current "{discount}%"')
+        raise Exception('Discount too high!')
+
+
+@step('verify SPOTLIGHT DEAL is correct')
+def verify_discount_percent(context):
+    current_discount = context.driver.find_element(by=By.XPATH,
+                                                   value=f"//div[./h2/*[text()='Spotlight Deal']]"
+                                                         f"//span[@class='itemtile-price-bold']")
+    discount = float(current_discount.text[:2])
+    normal_price = context.driver.find_element(by=By.XPATH,
+                                               value=f"//div[./h2/*[text()='Spotlight Deal']]"
+                                                     f"//span[@class='first']")
+    price = float(normal_price.text[1:])
+    disc_price = context.driver.find_element(by=By.XPATH,
+                                             value=f"//div[./h2/*[text()='Spotlight Deal']]"
+                                                   f"//span[@class='itemtile-price-strikethrough']")
+    current_price = float(disc_price.text[1:])
+    calc_discount = round(float((1 - price / current_price) * 100))
+
+    assert calc_discount == discount, f"Calculated discount is {calc_discount}% but provided discount is {discount}%"
+
+    #
+
+
+@step('verify FEATURED DEALS percentage more than {percent} %')
+def verify_min_discount_percentage(context, percent):
+    current_discount = context.driver.find_element(by=By.XPATH,
+                                                   value=f"//div[@class='ebayui-dne-item-featured-card ebayui-dne-item-featured-card']"
+                                                         f"//span[@class='itemtile-price-bold']")
+    discount = float(current_discount.text[:2])
+    if float(percent) > discount:
+        warnings.warn(f'Expected discount more than "{percent}" but current "{discount}"')
+        raise Exception('Discount too low!')
+
+
+@step('verify FEATURED DEALS percentage between {min_percent} and {max_percent} %')
+def verify_minmax_discount_percentage(context, min_percent, max_percent):
+    current_discount = context.driver.find_element(by=By.XPATH,
+                                                   value=f"//div[@class='ebayui-dne-item-featured-card ebayui-dne-item-featured-card']"
+                                                         f"//span[@class='itemtile-price-bold']")
+    discount = float(current_discount.text[:2])
+    if float(min_percent) > discount:
+        warnings.warn(f'Expected discount more than "{min_percent}%" but current "{discount}%"')
+        raise Exception('Discount too low!')
+    elif float(max_percent) < discount:
+        warnings.warn(f'Expected discount less than "{max_percent}%" but current "{discount}%"')
+        raise Exception('Discount too high!')
+
+
+@step('verify FEATURED DEALS is correct')
+def verify_correct_discount_percentage(context):
+    current_discount = context.driver.find_element(by=By.XPATH,
+                                                   value=f"//div[@class='ebayui-dne-item-featured-card ebayui-dne-item-featured-card']"
+                                                         f"//span[@class='itemtile-price-bold']")
+    discount = float(current_discount.text[:2])
+    normal_price = context.driver.find_element(by=By.XPATH,
+                                               value=f"//div[@class='ebayui-dne-item-featured-card ebayui-dne-item-featured-card']"
+                                                     f"//span[@class='first']")
+    price = float(normal_price.text[1:])
+    disc_price = context.driver.find_element(by=By.XPATH,
+                                             value=f"//div[@class='ebayui-dne-item-featured-card ebayui-dne-item-featured-card']"
+                                                   f"//span[@class='itemtile-price-strikethrough']")
+    current_price = float(disc_price.text[1:])
+    calc_discount = round(float((1 - price / current_price) * 100))
+
+    assert calc_discount == discount, f"Calculated discount is {calc_discount}% but provided discount is {discount}%"
