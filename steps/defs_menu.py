@@ -235,11 +235,15 @@ def verify_free_returns(context):
 
 @step('verify item condition is "{condition}"')
 def verify_free_returns(context, condition):
-    item_condition = context.driver.find_element(by=By.XPATH,
-                                                 value=f"//li[@class='s-item s-item__pl-on-bottom s-item--watch-at-corner']"
-                                                       f"[.//div[@class='s-item__info clearfix']]//span[@class='SECONDARY_INFO']")
-    assert item_condition.text == condition, f"Expected condition is '{condition}', but " \
-                                             f"Actual condition is '{item_condition.text}'"
+    try:
+        item_condition = context.driver.find_element(by=By.XPATH,
+                                                     value=f"//li[@class='s-item s-item__pl-on-bottom s-item--watch-at-corner']"
+                                                           f"[.//div[@class='s-item__info clearfix']]//span[@class='SECONDARY_INFO']")
+        assert item_condition.text == condition, f"Expected condition is '{condition}', but " \
+                                                 f"Actual condition is '{item_condition.text}'"
+    except NoSuchElementException:
+        warnings.warn('Need to create test for second form')
+        raise Exception('Second type of page was shown')
 
 
 @step('verify item is sponsored')
@@ -248,6 +252,7 @@ def verify_free_returns(context):
         sponsored = context.driver.find_element(by=By.XPATH,
                                                 value=f"//li[@class='s-item s-item__pl-on-bottom s-item--watch-at-corner']"
                                                       f"[.//div[@class='s-item__info clearfix']]//span[text()='Sponsored']")
+        assert sponsored
     except Exception:
         raise Exception("Item isn't sponsored")
 
