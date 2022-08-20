@@ -12,3 +12,19 @@ Feature: Loops and tables
         | Daily Deals     | Deals             |
         | Brand Outlet    | The Brand Outlet  |
 
+  Scenario: Test flying out menu "Shop by category"
+    Given Open URL "ebay.com"
+    Then Click flying out menu "Shop by category" and verify correct page was opened
+        | Category      | Subcategory                              | Page title                                |
+        | Motors        | Parts & accessories                      | Auto Parts & Accessories                  |
+        | Motors        | Cars & trucks                            | Cars & Trucks                             |
+        | Motors        | Motorcycles                              | Motorcycles                               |
+        | Motors        | Other vehicles                           | Other Vehicles & Trailers                 |
+        | Electronics   | Computers, Tablets & Network Hardware    | Computers, Tablets & Network Hardware     |
+        | Electronics   | Cell Phones, Smart Watches & Accessories | Cell Phones, Smart Watches & Accessories  |
+        | Electronics   | Video Games & Consoles                   | Video & PC Gaming                         |
+        | Electronics   | Cameras & Photo                          | Cameras & Photo                           |
+        | Home & garden | Yard, Garden & Outdoor Living Items      | Yard, Garden & Outdoor                    |
+        | Home & garden | Tools & Workshop Equipment               | Tools & Workshop Equipment                |
+        | Home & garden | Home Improvement                         | Home Improvement                          |
+        | Home & garden | Kitchen, Dining & Bar Supplies           | Kitchen, Dining & Bar Supplies            |
