@@ -356,7 +356,7 @@ def validate_percent_of_correct_items(context, percent) -> None:
     """Validate that correct items in list more than provided percent.
     Words to contain it title from table.
 
-    :param context: self
+    :param context: table, driver
     :param percent: minimum % to pass
     :return: bool
     """
@@ -386,11 +386,11 @@ def validate_percent_of_correct_items(context, percent) -> None:
 
 @step('Open FAQ element "{faq_element}"')
 def open_faq_element(context, faq_element) -> None:
-    """
+    """Click FAQ element for un-collapse
 
-    :param context:
-    :param faq_element:
-    :return:
+    :param context: driver
+    :param faq_element: Text of header FAQ element
+    :return: None
     """
     faq_paragraph_path = f"//section[@id='faq']//span[text()='{faq_element}']"
     faq_paragraph = context.driver.find_element(By.XPATH, faq_paragraph_path)
@@ -400,6 +400,12 @@ def open_faq_element(context, faq_element) -> None:
 
 @step('Verify that element "{faq_element}" contains text')
 def verify_faq_element(context, faq_element) -> None:
+    """Verify that raw text equal FAQ text
+
+    :param context: text, driver
+    :param faq_element: Text of header FAQ element
+    :return: None
+    """
     faq_text_path = f"//details[.//span[text()='What’s the best way to ship my item?']]/div"
     faq_text = context.driver.find_element(By.XPATH, faq_text_path)
 
