@@ -71,7 +71,7 @@ Feature: Loops and tables
 
   Scenario: Find items by filter and verify percent of items correct
     Given Open URL "ebay.com"
-        Then Input "Gopro hero 10 black" in the search field
+    Then Input "Gopro hero 10 black" in the search field
     And Click search button
     And Validate correct items with words in the title more than 50%
       | Parameter       |
@@ -135,7 +135,7 @@ Feature: Loops and tables
 
   Scenario Outline: Find items and verify percent of items correct
     Given Open URL "ebay.com"
-        Then Input "<search_item>" in the search field
+    Then Input "<search_item>" in the search field
     And Click search button
     And Validate correct items with words in the title more than <percentage>%
       | Parameter       |

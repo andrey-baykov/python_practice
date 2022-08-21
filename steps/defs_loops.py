@@ -141,7 +141,7 @@ def input_search_string(context, search_string) -> None:
 
 
 @step('Click search button')
-def click_search_button(context):
+def click_search_button(context) -> None:
     """Click on the search button
 
     :param context: self
@@ -154,7 +154,7 @@ def click_search_button(context):
 
 
 @step('Apply left menu with filters from the table')
-def apply_left_menu_filter(context):
+def apply_left_menu_filter(context) -> None:
     """Applies filter from left menu. Filter menu and filter from context.table
 
     :param context: self
@@ -178,7 +178,7 @@ def apply_left_menu_filter(context):
 
 
 @step('Validate filters was applied and shows above result table')
-def validate_filter_above_result_table(context) -> bool:
+def validate_filter_above_result_table(context) -> None:
     """Validate that filters above the results table are present. Filters data in one column
     table.
 
@@ -202,7 +202,12 @@ def validate_filter_above_result_table(context) -> bool:
 
 
 @step('Validate item with parameters from the table')
-def validate_item(context):
+def validate_item(context) -> None:
+    """Validate first element in a search result with parameters from a table.
+
+    :param context: self
+    :return: None
+    """
     test_set = {}
     test_set_pass = []
     for row in context.table.rows:
