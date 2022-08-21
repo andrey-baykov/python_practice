@@ -373,6 +373,7 @@ def validate_percent_of_correct_items(context, percent) -> None:
             items_incorrect += 1
             print(check, parameters_list, "in:", description)
     correct_items_percentage = int((items_correct / (items_correct + items_incorrect)) * 100)
+    print(f'Correct: {correct_items_percentage}%')
     assert correct_items_percentage > int(percent), f'Correct: {correct_items_percentage}%, ' \
                                                     f'correct: {items_correct} item(s), ' \
                                                     f'incorrect: {items_incorrect} item(s)'

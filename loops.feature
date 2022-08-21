@@ -108,3 +108,43 @@ Feature: Loops and tables
       | menu_items      | page_title        |
       | Daily Deals     | Deals             |
       | Brand Outlet    | The Brand Outlet  |
+
+  Scenario Outline: Find item and validate that by %
+    Given Open URL "ebay.com"
+    Then Input "<search_item>" in the search field
+    And Click search button
+    And Apply left menu with filters from the table
+      | Filter menu | Filter              |
+      | Brand       | DJI                 |
+      | Model       | DJI Mavic Pro       |
+      | Type        | Ready to Fly Drone  |
+      | Condition   | New                 |
+    And Validate filters was applied and shows above result table
+      | Filter              |
+      | DJI                 |
+      | New                 |
+    And Validate correct items with words in the title more than <percentage>%
+      | Parameter       |
+      | DJI             |
+      | Mavic Pro       |
+    Examples:
+      | search_item | percentage |
+      | DJI         | 50         |
+      | DJI         | 40         |
+      | DJI Mavic   | 50         |
+
+  Scenario Outline: Find items and verify percent of items correct
+    Given Open URL "ebay.com"
+        Then Input "<search_item>" in the search field
+    And Click search button
+    And Validate correct items with words in the title more than <percentage>%
+      | Parameter       |
+      | GoPro Hero      |
+      | 10              |
+      | Camera          |
+      | Black           |
+    Examples:
+      | search_item         | percentage |
+      | GoPro               | 50         |
+      | GoPro Hero          | 40         |
+      | GoPro Hero 10       | 50         |
