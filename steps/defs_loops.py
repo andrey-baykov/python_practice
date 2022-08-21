@@ -382,3 +382,25 @@ def validate_percent_of_correct_items(context, percent) -> None:
     assert correct_items_percentage > int(percent), f'Correct: {correct_items_percentage}%, ' \
                                                     f'correct: {items_correct} item(s), ' \
                                                     f'incorrect: {items_incorrect} item(s)'
+
+
+@step('Open FAQ element "{faq_element}"')
+def open_faq_element(context, faq_element) -> None:
+    """
+
+    :param context:
+    :param faq_element:
+    :return:
+    """
+    faq_paragraph_path = f"//section[@id='faq']//span[text()='{faq_element}']"
+    faq_paragraph = context.driver.find_element(By.XPATH, faq_paragraph_path)
+    faq_paragraph.click()
+    sleep(1)
+
+
+@step('Verify that element "{faq_element}" contains text')
+def verify_faq_element(context, faq_element) -> None:
+    faq_text_path = f"//details[.//span[text()='What’s the best way to ship my item?']]/div"
+    faq_text = context.driver.find_element(By.XPATH, faq_text_path)
+
+    assert context.text.replace("\n", " ") == faq_text.text

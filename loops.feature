@@ -148,3 +148,14 @@ Feature: Loops and tables
       | GoPro               | 50         |
       | GoPro Hero          | 40         |
       | GoPro Hero 10       | 50         |
+
+  Scenario: Verify selling FAQ
+    Given Open URL "ebay.com/sl/sell"
+    Then Open FAQ element "What’s the best way to ship my item?"
+    And Verify that element "What’s the best way to ship my item?" contains text
+    """
+    eBay provides recommendations, but you can choose a preferred shipping carrier.
+    Can’t make it to your local dropoff? Some offer free “ship from home” pickup.
+    Print your shipping labels with eBay to receive a discount from the carriers we work with.
+    If you don’t have a printer, we also offer QR codes for eBay labels.
+    """
