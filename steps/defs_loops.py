@@ -305,7 +305,13 @@ def get_xpath_type_2(parameter) -> str:
 
 
 @step('Click item "{menu_item}" in mosaic menu')
-def choose_mosaic_menu(context, menu_item):
+def choose_mosaic_menu(context, menu_item) -> None:
+    """Click menu item in mosaic menu
+
+    :param context: self
+    :param menu_item: menu item
+    :return: None
+    """
     menu_items_list_path = f"//div[@class='b-visualnav__grid']//div[@class='b-visualnav__title']"
     menu_items_list = context.driver.find_elements(By.XPATH, menu_items_list_path)
     for item in menu_items_list:
@@ -316,7 +322,13 @@ def choose_mosaic_menu(context, menu_item):
 
 
 @step('Click item "{menu}" in carousel menu')
-def choose_in_carousel_menu(context, menu):
+def choose_in_carousel_menu(context, menu) -> None:
+    """Click item in carousel menu. Slide carousel to right if item not clickable.
+
+    :param context: self
+    :param menu: menu item
+    :return: None
+    """
     menu_item_path = f"//div[@class='carousel__viewport carousel__viewport--mask'][./ul[@class='carousel__list']]" \
                      f"//li[.//p[text()='{menu}']]"
     menu_item = context.driver.find_element(By.XPATH, menu_item_path)
@@ -332,3 +344,35 @@ def choose_in_carousel_menu(context, menu):
             sleep(3)
             warnings.warn('Next Slide click')
     sleep(3)
+
+
+@step('Validate correct items with words in the title more than {percent}%')
+def validate_percent_of_correct_items(context, percent) -> None:
+    """Validate that correct items in list more than provided percent.
+    Words to contain it title from table.
+
+    :param context: self
+    :param percent: minimum % to pass
+    :return: bool
+    """
+    items_correct = 0
+    items_incorrect = 0
+    parameters_list = [item[0].lower() for item in context.table.rows]
+    try:
+        list_items_path = get_xpath_type_1("Description contains")
+        list_items = context.driver.find_elements(By.XPATH, list_items_path)
+    except NoSuchElementException:
+        list_items_path = get_xpath_type_2("Description contains")
+        list_items = context.driver.find_elements(By.XPATH, list_items_path)
+    for item in list_items:
+        description = item.text.lower()
+        check = all(param in description for param in parameters_list)
+        if check:
+            items_correct += 1
+        else:
+            items_incorrect += 1
+            print(check, parameters_list, "in:", description)
+    correct_items_percentage = int((items_correct / (items_correct + items_incorrect)) * 100)
+    assert correct_items_percentage > int(percent), f'Correct: {correct_items_percentage}%, ' \
+                                                    f'correct: {items_correct} item(s), ' \
+                                                    f'incorrect: {items_incorrect} item(s)'
