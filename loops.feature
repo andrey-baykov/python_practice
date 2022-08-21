@@ -1,4 +1,4 @@
-Feature: Loops and tables
+Feature: Loops and tables, raw text
 
   Scenario: Test top menu items variable
     Given Open URL "ebay.com"

@@ -265,10 +265,10 @@ def validate_item(context) -> None:
 
 
 def get_xpath_type_1(parameter) -> str:
-    """Function return XPATH for provided parameter
+    """Function return XPATH for provided parameter on screen type 1.
 
     :param parameter: parameter for validate
-    :return:
+    :return: xpath for element
     """
     if parameter == "Description contains":
         output = f"//li[@class='s-item s-item__pl-on-bottom s-item--watch-at-corner']" \
@@ -288,10 +288,10 @@ def get_xpath_type_1(parameter) -> str:
 
 
 def get_xpath_type_2(parameter) -> str:
-    """Function return XPATH for provided parameter
+    """Function return XPATH for provided parameter on screen type 2.
 
     :param parameter: parameter for validate
-    :return:
+    :return: xpath for element
     """
     if parameter == "Description contains":
         output = f"//div[@class='s-item__wrapper clearfix']//h3[contains(@class, 's-item__title')]"
@@ -406,7 +406,7 @@ def verify_faq_element(context, faq_element) -> None:
     :param faq_element: Text of header FAQ element
     :return: None
     """
-    faq_text_path = f"//details[.//span[text()='What’s the best way to ship my item?']]/div"
+    faq_text_path = f"//details[.//span[text()='{faq_element}']]/div"
     faq_text = context.driver.find_element(By.XPATH, faq_text_path)
 
     assert context.text.replace("\n", " ") == faq_text.text
