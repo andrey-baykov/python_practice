@@ -3,7 +3,8 @@ from time import sleep
 
 from behave import step
 from selenium import webdriver
-from selenium.common import NoSuchElementException, ElementNotInteractableException, ElementClickInterceptedException
+from selenium.common import NoSuchElementException, ElementNotInteractableException, ElementClickInterceptedException, \
+    StaleElementReferenceException
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
@@ -341,9 +342,15 @@ def choose_in_carousel_menu(context, menu) -> None:
                         f"[./ul[@class='carousel__list']][.//li[.//p[text()='{menu}']]]]" \
                         f"//button[@aria-label='Next Slide']"
     button_right = context.driver.find_element(By.XPATH, button_right_path)
+    attempts = 0
     for _ in range(3):
         try:
-            menu_item.click()
+            while attempts < 2:
+                try:
+                    menu_item.click()
+                    break
+                except StaleElementReferenceException:
+                    attempts += 1
         except ElementClickInterceptedException:
             button_right.click()
             sleep(3)

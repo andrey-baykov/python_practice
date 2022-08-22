@@ -69,7 +69,24 @@ Feature: Loops and tables, raw text
       | Yes   | Price higher then    | 1500     |
       | Yes   | Price between        | 1800 2000   |
 
-  Scenario: Find items by filter and verify percent of items correct
+    Scenario: Find sport watch throw menus and validate that
+    Given Open URL "ebay.com"
+    Then Click flying out menu "Shop by category" and verify correct page was opened
+      | Category         | Subcategory     | Page title                  |
+      | Sporting goods   | Sporting goods  | Sporting Goods & Equipment  |
+    And Click item "Fitness, Running & Yoga" in mosaic menu
+    And Verify page "Fitness, Running & Yoga" was opened
+    And Click item "Fitness Technology" in mosaic menu
+    And Verify page "Fitness Gadgets" was opened
+    Then Click item "GPS & Running Watches" in carousel menu
+    And Verify page "GPS & Running Watches" was opened
+    Then Validate item with parameters from the table
+      | Apply | Parameters           | Value      |
+      | Yes   | Description contains | Watch      |
+      | Yes   | Price higher then    | 85        |
+      | Yes   | Price between        | 80 120     |
+
+  Scenario: Find GoPro camera by filter and verify percent of items correct
     Given Open URL "ebay.com"
     Then Input "Gopro hero 10 black" in the search field
     And Click search button
@@ -79,6 +96,16 @@ Feature: Loops and tables, raw text
       | 10              |
       | Camera          |
       | Black           |
+
+  Scenario: Find Garmin watch by filter and verify percent of items correct
+    Given Open URL "ebay.com"
+    Then Input "Garmin watch" in the search field
+    And Click search button
+    And Validate correct items with words in the title more than 80%
+      | Parameter       |
+      | Garmin          |
+      | watch           |
+      | GPS             |
 
   Scenario: Find item throw search with parameters in the left menu and validate that by %
     Given Open URL "ebay.com"
@@ -149,7 +176,7 @@ Feature: Loops and tables, raw text
       | GoPro Hero          | 40         |
       | GoPro Hero 10       | 50         |
 
-  Scenario: Verify selling FAQ
+  Scenario: Verify selling FAQ - test 1
     Given Open URL "ebay.com/sl/sell"
     Then Open FAQ element "What’s the best way to ship my item?"
     And Verify that element "What’s the best way to ship my item?" contains text
@@ -158,4 +185,29 @@ Feature: Loops and tables, raw text
     Can’t make it to your local dropoff? Some offer free “ship from home” pickup.
     Print your shipping labels with eBay to receive a discount from the carriers we work with.
     If you don’t have a printer, we also offer QR codes for eBay labels.
+    """
+
+  Scenario: Verify selling FAQ - test 2
+    Given Open URL "ebay.com/sl/sell"
+    Then Open FAQ element "What can I sell on eBay?"
+    And Verify that element "What can I sell on eBay?" contains text
+    """
+    You can sell almost anything, from homemade goods to used or unused items from your closet.
+    We restrict items that violate any laws, or infringe on intellectual property.
+    """
+
+  Scenario: Verify selling FAQ - test 3
+    Given Open URL "ebay.com/sl/sell"
+    Then Open FAQ element "Do I have to pay federal income tax on my sales?"
+    And Verify that element "Do I have to pay federal income tax on my sales?" contains text
+    """
+    Starting on Jan 1, 2022, IRS regulations require all businesses that process payments,
+    including online marketplaces like eBay, to issue a Form 1099-K for all sellers who receive
+    $600 or more in sales. The new tax reporting requirement may impact your 2022 tax return
+    that you may file in 2023. However, just because you receive a 1099-K doesn’t automatically
+    mean that you’ll owe taxes on the amount reported on your 1099-K. Only goods that are sold
+    for a profit are considered taxable, so you won’t owe any taxes on something you sell
+    for less than what you paid for it. For example, if you bought a bike for $1,000 last
+    year, and then sold it on eBay today for $700, that $700 you made would generally not be
+    subject to income tax. Check out our 1099-K FAQ to learn more about these changes.
     """
