@@ -1,7 +1,9 @@
+import warnings
 from time import sleep
 
 from behave import step
 from selenium import webdriver
+from selenium.common import NoSuchElementException
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
@@ -69,25 +71,34 @@ def apply_filters_from_table(context) -> None:
 def validate_items_in_result_list(context) -> None:
     """
     Function read parameters from a table in context and validate list with all applied parameters
-    equal to original results list\n
+    equal to original results list. Function check that page has divider 'Results matching fewer words' or not.
+    If divider is present function use only results before divider else function use all results to compare\n
     :param context: driver, table
     :return: None
     """
+    divider_path = "//li[contains(@class, 'REWRITE_START')]"
+    try:
+        context.driver.find_element(By.XPATH, divider_path)
+        divider = "[following-sibling::li[contains(@class, 'REWRITE_START')]]"
+    except NoSuchElementException:
+        divider = ""
     results_list_origin_path = f"//div[@class='srp-river-results clearfix']" \
-                               f"//li[./div[@class='s-item__wrapper clearfix']]" \
-                               f"[following-sibling::li[contains(@class, 'REWRITE_START')]]"
+                               f"//li[./div[@class='s-item__wrapper clearfix']]{divider}"
     results_list_origin = context.driver.find_elements(By.XPATH, results_list_origin_path)
+
     results_list_filtered_path = f"//div[@class='srp-river-results clearfix']" \
-                                 f"//li[./div[@class='s-item__wrapper clearfix']]" \
-                                 f"[following-sibling::li[contains(@class, 'REWRITE_START')]]" \
-                                 f"[.//*"
+                                 f"//li[./div[@class='s-item__wrapper clearfix']]{divider}[.//*"
     for filter_item in context.table:
         filter_value = filter_item['filters']
         results_list_filtered_path += f"[contains(text(), '{filter_value}')]"
     results_list_filtered_path += "]"
     results_list_filtered = context.driver.find_elements(By.XPATH, results_list_filtered_path)
+
     result_o = len(results_list_origin)
     result_f = len(results_list_filtered)
-    assert result_o == result_f, \
-        f"Validate is failed. Filtered results {result_f} items are not equal {result_o} items " \
-        f"of original results."
+    print(results_list_origin_path)
+    print(results_list_filtered_path)
+    print(result_o)
+    sleep(5)
+    assert result_o == result_f, f"Validate is failed. Filtered results {result_f} items are not equal {result_o} " \
+                                 f"items of original results."
