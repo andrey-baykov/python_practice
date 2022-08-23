@@ -1,8 +1,5 @@
-!/steps/definitions.py
-!/steps/defs_loops.py
-!/steps/defs_menu.py
-!/steps/defs_var.py
-!/loops.feature
-!/menu.feature
-!/test.feature
-!/vars.feature
+*.feature
+defs*.py
+definitions.py
+!defs_validate.py
+!validate.feature
