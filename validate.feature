@@ -1,8 +1,8 @@
 Feature: Validate searched results
 
-  # For some reason when I run all tests in regular mode I have browser exception
+  # For some reason when run all tests in regular mode browser have an exception
   # "Too many redirections..."
-  # Then I switch to incognito mode and continue execute tests without exceptions
+  # Then switch to incognito mode and execute tests without exceptions
   Background:
     Given Set regular or incognito mode for browser: regular
 

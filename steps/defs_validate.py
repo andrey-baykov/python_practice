@@ -48,6 +48,7 @@ def type_string_to_search(context, string_to_search) -> None:
     :param string_to_search: string to search
     :return: None
     """
+    # Home page and advanced search page have different paths to search field
     try:
         search_string_path = "//input[@aria-label='Search for anything']"
         search_string = context.driver.find_element(By.XPATH, search_string_path)
@@ -67,6 +68,7 @@ def click_button_search(context) -> None:
     :param context: driver
     :return: None
     """
+    # Home page and advanced search page have different paths to search button
     try:
         button_search_path = "//input[@id='gh-btn'][@value='Search']"
         button_search = context.driver.find_element(By.XPATH, button_search_path)
@@ -109,6 +111,7 @@ def validate_items_in_result_list(context) -> None:
     :return: None
     """
     divider_path = "//li[contains(@class, 'REWRITE_START')]"
+    # Some results lists have list divider but some haven't
     try:
         context.driver.find_element(By.XPATH, divider_path)
         divider = "[following-sibling::li[contains(@class, 'REWRITE_START')]]"
