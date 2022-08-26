@@ -1,25 +1,8 @@
 from time import sleep
 
 from behave import step
-from selenium import webdriver
 from selenium.common import NoSuchElementException
-from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.by import By
-from webdriver_manager.chrome import ChromeDriverManager
-
-
-@step('Set regular or incognito mode for browser: {mode}')
-def set_browser_mode(context, mode) -> None:
-    """
-    Set browser to regular or incognito mode for all scenarios.
-    :param context: mode
-    :param mode: regular - open browser in regular, incognito - open browser in incognito mode.
-    :return: None
-    """
-    if mode in ('regular', 'incognito'):
-        context.browser_mode = mode
-    else:
-        raise Exception('Incorrect browser mode. Allow only regular or incognito mode.')
 
 
 @step('Open a home page on the eBay website')
@@ -29,14 +12,6 @@ def open_browser(context) -> None:
     :param context: driver, browser_mode
     :return: None
     """
-    if context.browser_mode == 'incognito':
-        chrome_options = webdriver.ChromeOptions()
-        chrome_options.add_argument("--incognito")
-        context.driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()),
-                                          chrome_options=chrome_options)
-    else:
-        context.driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
-
     context.driver.get("https://www.eBay.com/")
 
 
@@ -98,16 +73,20 @@ def apply_filters_from_table(context) -> None:
                             f"//*[text()='{category_filter}']"
         items_filter = context.driver.find_element(By.XPATH, items_filter_path)
         items_filter.click()
-        sleep(5)
+        sleep(3)
+    if context.table:
+        for cat, filter_item in context.table.rows:
+            context.filters.append(filter_item)
 
 
 @step('Validate that items in the result list matched to filters')
 def validate_items_in_result_list(context) -> None:
     """
-    Function read parameters from a table in context and validate list with all applied parameters
-    equal to original results list. Function check that page has divider 'Results matching fewer words' or not.
+    Function read parameters from a table in context but if is empty read filters from previous step.
+    And validate list with all applied parameters equal to original results list.
+    Function check that page has divider 'Results matching fewer words' or not.
     If divider is present function use only results before divider else function use all results to compare\n
-    :param context: driver, table
+    :param context: driver, table, filters
     :return: None
     """
     divider_path = "//li[contains(@class, 'REWRITE_START')]"
@@ -123,15 +102,19 @@ def validate_items_in_result_list(context) -> None:
 
     results_list_filtered_path = f"//div[@class='srp-river-results clearfix']" \
                                  f"//li[./div[@class='s-item__wrapper clearfix']]{divider}[.//*"
-    for filter_item in context.table:
-        filter_value = filter_item['filters']
-        results_list_filtered_path += f"[contains(text(), '{filter_value}')]"
+    if context.table:
+        for filter_item in context.table:
+            filter_value = filter_item['filters']
+            results_list_filtered_path += f"[contains(text(), '{filter_value}')]"
+    elif context.filters:
+        for filter_item in context.filters:
+            results_list_filtered_path += f"[contains(text(), '{filter_item}')]"
     results_list_filtered_path += "]"
     results_list_filtered = context.driver.find_elements(By.XPATH, results_list_filtered_path)
 
     result_o = len(results_list_origin)
     result_f = len(results_list_filtered)
-    sleep(5)
+    sleep(3)
     assert result_o == result_f, f"Validate is failed. Filtered results {result_f} items are not equal {result_o} " \
                                  f"items of original results."
 
