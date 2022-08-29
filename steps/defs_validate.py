@@ -28,10 +28,12 @@ def type_string_to_search(context, string_to_search) -> None:
         search_string_path = "//input[@aria-label='Search for anything']"
         search_string = context.driver.find_element(By.XPATH, search_string_path)
     except NoSuchElementException:
-        search_string_path = "//fieldset[./legend[text()='Enter keywords or item number']]" \
-                             "//input[@placeholder='Enter keywords or item number']"
-        search_string = context.driver.find_element(By.XPATH, search_string_path)
-
+        try:
+            search_string_path = "//fieldset[./legend[text()='Enter keywords or item number']]" \
+                                 "//input[@placeholder='Enter keywords or item number']"
+            search_string = context.driver.find_element(By.XPATH, search_string_path)
+        except NoSuchElementException:
+            raise Exception("Cannot find search string element.")
     search_string.send_keys(string_to_search)
     sleep(1)
 
@@ -48,10 +50,12 @@ def click_button_search(context) -> None:
         button_search_path = "//input[@id='gh-btn'][@value='Search']"
         button_search = context.driver.find_element(By.XPATH, button_search_path)
     except NoSuchElementException:
-        button_search_path = "//fieldset[./legend[text()='Enter keywords or item number']]" \
-                             "//button[text()='Search']"
-        button_search = context.driver.find_element(By.XPATH, button_search_path)
-
+        try:
+            button_search_path = "//fieldset[./legend[text()='Enter keywords or item number']]" \
+                                 "//button[text()='Search']"
+            button_search = context.driver.find_element(By.XPATH, button_search_path)
+        except NoSuchElementException:
+            raise Exception("Cannot find search button element.")
     button_search.click()
     sleep(2)
 

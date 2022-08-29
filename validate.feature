@@ -1,7 +1,4 @@
 Feature: Validate searched results in "incognito" mode of browser
-  # For some reason when run all tests in regular mode browser have an exception
-  # "Too many redirections..."
-  # Then switch to incognito mode and execute tests without exceptions
 
   Background:
     Given Open a home page on the eBay website
