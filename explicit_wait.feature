@@ -1,13 +1,25 @@
-Feature: Explicit wait
+Feature: Check results on item page
 
   Scenario: Search item and validate results on 4th pages
-    Given Open ebay website
-    Then Type "dell 27 monitor" in string and press search button
-    And Apply filters from the tables
-      | category | filter |
-      | Display Type | LCD           |
-      | Video Inputs | HDMI Standard |
-    And Validate results on 4 pages
-      | filters    |
-      | LCD        |
-      | New        |
+    Given Open https://www.ebay.com website
+    Then Search Michelin tires tires
+    And Apply filters
+      | Category      | Filter        |
+      | Rim Diameter  | 20            |
+      | Section Width | 265           |
+      | Aspect Ratio  | 45            |
+      | Condition     | New           |
+      | Quantity      | 4             |
+    Then Validate all listing results by parameters
+      | parameter             |
+      | Michelin              |
+      | 265/45R20             |
+    And Validate all results on each result page
+      | param          | value         |
+      | Condition:     | New           |
+      | Brand:         | Michelin      |
+      | Rim Diameter:  | 20            |
+      | Section Width: | 265           |
+      | Aspect Ratio:  | 45            |
+      | Quantity:      | 4             |
+    Then Print tests results
