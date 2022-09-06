@@ -57,45 +57,66 @@ def validate_lists(context):
 
 @step('Validate all results on each result page')
 def validate_on_page(context):
-    all_items_path = "//ul[@class='srp-results srp-list clearfix']//li[.//div[@class='s-item__wrapper clearfix']]"
-    all_items = WebDriverWait(context.driver, 10).until(EC.presence_of_all_elements_located((By.XPATH, all_items_path)),
-                                                        message="No items found on the page.")
     errors = []
     elements = []
-    for item in all_items:
-        title = item.find_elements(By.XPATH, "descendant::span[@role='heading']")
-        link = item.find_elements(By.XPATH, "descendant::a[@class='s-item__link']")
+    paginator = context.driver.find_elements(By.XPATH, "//nav[@class='pagination']")
+    loop_run = True
+    page = 0
+    while loop_run:
+        all_items_path = "//ul[@class='srp-results srp-list clearfix']//li[.//div[@class='s-item__wrapper clearfix']]"
+        all_items = WebDriverWait(context.driver, 10).until(
+            EC.presence_of_all_elements_located((By.XPATH, all_items_path)),
+            message="No items found on the page.")
+        page += 1
+        print("Page:", page, "items:", len(all_items))
 
-        if not title or not link:
-            errors.append('No title or link for item')
-            continue
+        for item in all_items:
+            title = item.find_elements(By.XPATH, "descendant::span[@role='heading']")
+            link = item.find_elements(By.XPATH, "descendant::a[@class='s-item__link']")
 
-        elements.append((title[0].text, link[0].get_attribute('href')))
+            if not title or not link:
+                errors.append('No title or link for item')
+                continue
 
-    results_window = context.driver.current_window_handle
+            elements.append((title[0].text, link[0].get_attribute('href')))
 
-    for title, link in elements:
-        context.driver.execute_script(f"window.open('{link}')")
-        context.driver.switch_to.window(context.driver.window_handles[-1])
+        results_window = context.driver.current_window_handle
 
-        labels_path = "//div[@data-testid='ux-layout-section-module'][.//span[text()='Item specifics']]//div[@class='ux-labels-values__labels']//span[text()]"
-        values_path = "//div[@data-testid='ux-layout-section-module'][.//span[text()='Item specifics']]//div[@class='ux-labels-values__values']//span[text()]"
-        labels = WebDriverWait(context.driver, 10).until(EC.presence_of_all_elements_located((By.XPATH, labels_path)))
-        values = WebDriverWait(context.driver, 10).until(EC.presence_of_all_elements_located((By.XPATH, values_path)))
+        for title, link in elements:
+            context.driver.execute_script(f"window.open('{link}')")
+            context.driver.switch_to.window(context.driver.window_handles[-1])
 
-        labels = [label.text for label in labels]
-        values = [value.text for value in values]
+            labels_path = "//div[@data-testid='ux-layout-section-module'][.//span[text()='Item specifics']]" \
+                          "//div[@class='ux-labels-values__labels']//span[text()]"
+            values_path = "//div[@data-testid='ux-layout-section-module'][.//span[text()='Item specifics']]" \
+                          "//div[@class='ux-labels-values__values']//span[text()]"
+            labels = WebDriverWait(context.driver, 10).until(
+                EC.presence_of_all_elements_located((By.XPATH, labels_path)))
+            values = WebDriverWait(context.driver, 10).until(
+                EC.presence_of_all_elements_located((By.XPATH, values_path)))
 
-        item_specifics = dict(zip(labels, values))
-        err_desc = {}
-        for param, val in context.table.rows:
-            if item_specifics[param].lower() != val.lower():
-                err_desc[param] = val
-        if err_desc:
-            errors.append(f"Item {title} not related to search. Parameters: {err_desc}. Link: {link} ")
+            labels = [label.text for label in labels]
+            values = [value.text for value in values]
 
-        context.driver.close()
-        context.driver.switch_to.window(results_window)
+            item_specifics = dict(zip(labels, values))
+            err_desc = {}
+            for param, val in context.table.rows:
+                if item_specifics[param].lower() != val.lower():
+                    err_desc[param] = val
+            if err_desc:
+                errors.append(f"Item {title} not related to search. Parameters: {err_desc}. Link: {link} ")
+
+            context.driver.close()
+            context.driver.switch_to.window(results_window)
+
+        if not paginator:
+            loop_run = False
+        else:
+            next_page = context.driver.find_elements(By.XPATH, "//a[@type='next']")
+            if next_page[0].get_attribute('aria-disabled') == 'true':
+                loop_run = False
+            else:
+                next_page[0].click()
 
     context.page_validate = errors
 

@@ -10,6 +10,7 @@ def before_all(context):
 def before_feature(context, feature):
     pass
 
+
 def before_scenario(context, scenario):
     context.driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
 
@@ -20,6 +21,7 @@ def before_step(context, step):
 
 def after_step(context, step):
     pass
+
 
 def after_scenario(context, scenario):
     context.driver.quit()
